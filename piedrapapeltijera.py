@@ -1,13 +1,58 @@
 #encoding:UTF-8
 import random
+import time
 
-opcionesJuego = ["Piedra", "Papel", "Tijera", "Lagarto", "Spock", "Salir del Juego"]
+opcionesJuego = ["Piedra", "Papel", "Tijera", "Lagarto", "Spock", "Ver Puntaje", "Salir del Juego"]
+
+
+partidasPC=0
+partidasUsuario=0
+partidasEmpate=0
+estado = True
+
+
+
+def porcentaje():
+    x =0
+    partidasTotal = partidasPC+partidasUsuario
+    if partidasTotal > 0:
+        x = (partidasUsuario/partidasTotal) * 100
+    return round(x,2)
+
+def muestraPuntaje():
+    print ("")
+    print ("===Puntajes Obtenidos=== ")
+    print ("Usuario: ", partidasUsuario)
+    print ("Pc: ", partidasPC)
+    print ("Empates: ", partidasEmpate)
+    print ("Porcentaje de Mis victorias: ", porcentaje(), "%")
+    print ("--------------------")
+
 def pcDecision():
     return random.randrange(1, 5)
 
 def imprimeOpciones():
+    print("")
+    print("*** A JUGAR ****")
     for o in  opcionesJuego:
-        print(str(opcionesJuego.index(o)+1)+")"+o)
+        print(str(opcionesJuego.index(o)+1)+"=> "+o)
+
+def devuelvePoder(pc, mi):
+    mensajes = {
+        "13": "Piedra aplasta Tijera",
+        "14": "Piedra aplasta Lagarto",
+        "21": "Papel envuelve Piedra",
+        "25": "Papel desautoriza Spock",
+        "32": "Tijera corta Papel",
+        "34": "Tijera decapita Lagarto",
+        "42": "Lagarto devora Papel",
+        "45": "Lagarto envenena Spock",
+        "51": "Spock vaporiza Piedra",
+        "53": "Spock rompe Tijera"
+    }
+    clave = str(pc)+""+str(mi)
+    return  mensajes[str(pc)+""+str(mi)]
+
 
 def miDecision():
     opcion =""
@@ -39,28 +84,29 @@ def ganador(pc, mi):
         ganador=-1
     return  ganador
 
-while True: 
+while estado :
     opcionPc = pcDecision()
     imprimeOpciones()
     opcionMi = miDecision()
     if opcionMi == 6:
-        print("Nos vemos!")
-        break
-
-    print("Tu eliges: ", opcionesJuego[opcionMi-1])
-    print("PC eligio: ", opcionesJuego[opcionPc-1])
-    print("...")
-
-    gana= int(ganador(opcionPc, opcionMi))
-
-    if gana==-1:
-        print("Gana PC=>")
-    elif gana==0:
-        print("Empate")
+        muestraPuntaje()
+        time.sleep(2.4)
+    elif opcionMi == 7:
+        muestraPuntaje()
+        time.sleep(2.4)
+        print("Bye :)")
+        estado = False
     else:
-        print("Ganaste=>")
-
-    again = input("Jugamos de nuevo? Si/No: ")
-    if 'No' in again:
-        print("Nos vemos!")
-        break
+        gana= int(ganador(opcionPc, opcionMi))
+        print("----------------")
+        if gana==-1:
+            partidasPC+=1
+            print("Gana PC=>" + devuelvePoder(opcionPc, opcionMi))
+        elif gana==0:
+            partidasEmpate+=1
+            print("Empate=> "+opcionesJuego[opcionMi-1])
+        else:
+            partidasUsuario+=1
+            print("Ganaste=>" + devuelvePoder(opcionMi, opcionPc))
+        print("-----------------")
+        time.sleep(2.4)
