@@ -50,7 +50,6 @@ def devuelvePoder(pc, mi):
         "51": "Spock vaporiza Piedra",
         "53": "Spock rompe Tijera"
     }
-    clave = str(pc)+""+str(mi)
     return  mensajes[str(pc)+""+str(mi)]
 
 
